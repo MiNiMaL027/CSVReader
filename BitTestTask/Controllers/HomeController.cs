@@ -34,9 +34,10 @@ namespace BitTestTask.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeletePerson(List<int> ids)
+        public async Task<IActionResult> DeletePerson(int id)
         {
-            await _personService.DeleteData(ids);
+
+            await _personService.DeleteData(new List<int>() { id});
             return Ok();
         }
     }

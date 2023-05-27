@@ -4,6 +4,8 @@
 }
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
@@ -15,7 +17,7 @@
 
 <script>
     $(document).ready(function () {
-        let table = $('#myTable').DataTable({
+        var table = $('#myTable').DataTable({
             ajax: {
                 url: '/Home/GetAllPerson',
                 method: 'GET',
@@ -27,7 +29,11 @@
                 { data: 'dateOfBirth' },
                 { data: 'married' },
                 { data: 'phone' },
-                { data: 'salary' }
+                { data: 'salary' },
+                {
+                    data: null,
+                    defaultContent: '<button class="btn btn-primary btn-light editBtn"><i class="fas fa-pencil-alt"></i></button> <button class="btn btn-danger btn-light deleteBtn"><i class="fas fa-trash-alt"></i></button>'
+                }
             ],
             select: {
                 style: 'os',
@@ -35,124 +41,95 @@
             },
             searching: true,
             paging: true,
-            ordering: true,
+            ordering: true
         });
 
-        $('#myTable tbody').on('click', 'tr', function () {
-            $(this).toggleClass('selected');
+        $('#myTable tbody').on('click', '.editBtn', function () {
+            rowData = table.row($(this).closest('tr')).data();
+            openEditModal(rowData);
         });
 
-        $('#editRow').click(function () {
-            let selectedRows = table.rows('.selected').data();
-            if (selectedRows.length > 0) {
-                let firstSelectedRow = selectedRows[0];
+        function openEditModal(rowData) {
 
-                let $editPanel = $('#editPanel');
-                let $inputs = $editPanel.find('input');
+            $('#nameInput').val(rowData.name);
+            $('#dobInput').val(rowData.dateOfBirth);
+            $('#marriedInput').prop('checked', rowData.married);
+            $('#phoneInput').val(rowData.phone);
+            $('#salaryInput').val(rowData.salary);
 
-                $inputs.eq(0).val(firstSelectedRow.name);
-                $inputs.eq(1).val(firstSelectedRow.dateOfBirth);
-                $inputs.eq(2).val(firstSelectedRow.married);
-                $inputs.eq(3).val(firstSelectedRow.phone);
-                $inputs.eq(4).val(firstSelectedRow.salary);
+            $('#editModal').modal('show');
+        }
 
-                $editPanel.show();
-            } else {
-                console.log('No rows selected.');
-            }
+        $('#editModal .close').click(function () {
+            $('#editModal').modal('hide');
         });
 
-        $('#saveChanges').click(function () {
-            let $editPanel = $('#editPanel');
-            let $inputs = $editPanel.find('input');
+        $('#editModal .modal-footer .btn-secondary').click(function () {
+            $('#editModal').modal('hide');
+        });
 
-            let updatedData = {
-                name: $inputs.eq(0).val(),
-                dateOfBirth: $inputs.eq(1).val(),
-                married: $inputs.eq(2).val(),
-                phone: $inputs.eq(3).val(),
-                salary: $inputs.eq(4).val()
+        $('#myTable tbody').on('click', '.deleteBtn', function () {
+            var rowData = table.row($(this).closest('tr')).data();
+
+            console.log('Delete row:', rowData);
+
+            deleteRowOnServer(rowData);
+        });
+
+        $('#editModal').on('hidden.bs.modal', function () {
+
+            $('#nameInput').val('');
+            $('#dobInput').val('');
+            $('#marriedInput').prop('checked', false);
+            $('#phoneInput').val('');
+            $('#salaryInput').val('');
+        });
+
+        $('#saveChangesModal').click(function () {
+            var editedData = {
+                id: rowData.id,
+                name: $('#nameInput').val(),
+                dateOfBirth: $('#dobInput').val(),
+                married: $('#marriedInput').prop('checked'),
+                phone: $('#phoneInput').val(),
+                salary: $('#salaryInput').val(),
             };
 
-            let selectedRow = table.rows('.selected').nodes().to$();
-            let rowData = table.row(selectedRow).data();
+            editRowOnServer(editedData);
+        });
 
-            $.extend(rowData, updatedData);
-
+        function editRowOnServer(rowData) {
             $.ajax({
                 url: '/Home/UpdatePerson',
                 method: 'POST',
                 data: rowData,
                 success: function (response) {
-                    console.log('Data updated successfully:', response);
-
+                    console.log('Row edited successfully:', response);
                     table.ajax.reload();
-                    $editPanel.hide();
                 },
                 error: function (error) {
-                    console.error('Error updating data:', error);
+                    console.error('Error editing row:', error);
                 }
             });
-        });
+        }
 
-        $('#deleteRow').click(function () {
-            let selectedRows = table.rows('.selected').data();
-            if (selectedRows.length > 0) {
-                let selectedIds = selectedRows
-                    .toArray()
-                    .map(function (row) {
-                        return row.id;
-                    });
-
-                if (confirm('Are you sure you want to delete the selected row(s)?')) {
-
-                    $.ajax({
-                        url: '/Home/DeletePerson',
-                        method: 'POST',
-                        data: { ids: selectedIds },
-                        success: function (response) {
-                            console.log('Rows deleted successfully');
-
-                            table.ajax.reload();
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error deleting rows:', error);
-                        }                      
-                    });
+        function deleteRowOnServer(rowData) {
+            $.ajax({
+                url: '/Home/DeletePerson',
+                method: 'POST',
+                data: { id: rowData.id },
+                success: function (response) {
+                    console.log('Row deleted successfully:', response);
+                    table.ajax.reload();
+                },
+                error: function (error) {
+                    console.error('Error deleting row:', error);
                 }
-            } else {
-                console.log('No rows selected.');
-            }
-        });
+            });
+        }
     });
 </script>
 
-
-<button class="btn btn-outline-dark" id="deleteRow">Delete Selected Row</button>
-<button class="btn btn-outline-dark" id="editRow">Edit Selected Row</button>
-
-
-<div id="editPanel" style="display: none;">
-    <br />
-    <label>Name:</label>
-    <input type="text" id="nameInput">
-    <label>Date of Birth:</label>
-    <input type="date" id="dobInput">
-    <label>Married:</label>
-    <input type="checkbox" id="marriedInput">
-    <label>Phone:</label>
-    <input type="number" id="phoneInput">
-    <label>Salary:</label>
-    <input type="text" id="salaryInput">
-    <br />
-    <br />
-    <div class="centered-button">
-        <button class="btn btn-light" id="saveChanges">Save Changes</button>
-    </div>
-</div>
-
-<br />
-<br />
 <table id="myTable">
     <thead>
         <tr>
@@ -161,11 +138,53 @@
             <th>Date of Birth</th>
             <th>Married</th>
             <th>Phone</th>
-            <th>Salary</th>         
+            <th>Salary</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <!-- Table rows will be dynamically populated -->
     </tbody>
 </table>
+
+<div id="editModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Row</h5>
+                <button type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="nameInput">Name</label>
+                        <input type="text" class="form-control" id="nameInput">
+                    </div>
+                    <div class="form-group">
+                        <label for="dobInput">Date of Birth</label>
+                        <input type="date" class="form-control" id="dobInput">
+                    </div>
+                    <div class="form-group">
+                        <label for="marriedInput">Married</label>
+                        <input type="checkbox" class="form-check-input" id="marriedInput">
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneInput">Phone</label>
+                        <input type="number" class="form-control" id="phoneInput">
+                    </div>
+                    <div class="form-group">
+                        <label for="salaryInput">Salary</label>
+                        <input type="text" class="form-control" id="salaryInput">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="saveChangesModal">Save Changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
