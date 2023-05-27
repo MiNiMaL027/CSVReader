@@ -8,7 +8,7 @@ using Task_Repositories;
 
 #nullable disable
 
-namespace BitTestTask.Migrations
+namespace BitTestTask.Web.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
     partial class ApplicationContextModelSnapshot : ModelSnapshot

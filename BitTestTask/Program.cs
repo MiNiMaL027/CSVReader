@@ -29,7 +29,7 @@ namespace BitTestTask
             var connection = builder.Configuration.GetConnectionString("CsvTestConnection");
 
             builder.Services.AddDbContext<ApplicationContext>(options =>
-              options.UseSqlServer(connection, b => b.MigrationsAssembly("BitTestTask")));
+              options.UseSqlServer(connection, b => b.MigrationsAssembly("BitTestTask.Web")));
 
             var app = builder.Build();
 

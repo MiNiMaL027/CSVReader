@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BitTestTask.Migrations
+namespace BitTestTask.Web.Migrations
 {
     /// <inheritdoc />
     public partial class initialize : Migration

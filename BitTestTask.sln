@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitTestTask", "BitTestTask\BitTestTask.csproj", "{2C2A3E4A-EF12-4878-878E-1A72093DCD0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitTestTask.Web", "BitTestTask\BitTestTask.Web.csproj", "{2C2A3E4A-EF12-4878-878E-1A72093DCD0C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task_Domain", "Task_Domain\Task_Domain.csproj", "{AD92C185-C69F-4DCF-A2A0-BA54E45ED3F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task_Service", "Task_Service\Task_Service.csproj", "{85F03584-8561-49AD-9279-266F8CBBB826}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task_Repositories", "Task_Repositories\Task_Repositories.csproj", "{861B9053-0FBB-44AD-9E56-810965BF793D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task_Repositories", "Task_Repositories\Task_Repositories.csproj", "{861B9053-0FBB-44AD-9E56-810965BF793D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

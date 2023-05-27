@@ -9,10 +9,10 @@ using Task_Repositories;
 
 #nullable disable
 
-namespace BitTestTask.Migrations
+namespace BitTestTask.Web.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230527135420_initialize")]
+    [Migration("20230527165037_initialize")]
     partial class initialize
     {
         /// <inheritdoc />
