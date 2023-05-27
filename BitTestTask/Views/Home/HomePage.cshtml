@@ -1,0 +1,171 @@
+﻿@{
+    ViewData["Title"] = "HomePage";
+    Layout = "~/Views/Shared/Layout_main.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<style>
+    #editPanel .centered-button {
+        text-align: center;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        let table = $('#myTable').DataTable({
+            ajax: {
+                url: '/Home/GetAllPerson',
+                method: 'GET',
+                dataSrc: ''
+            },
+            columns: [
+                { data: null, defaultContent: '', className: 'select-checkbox' },
+                { data: 'name' },
+                { data: 'dateOfBirth' },
+                { data: 'married' },
+                { data: 'phone' },
+                { data: 'salary' }
+            ],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            searching: true,
+            paging: true,
+            ordering: true,
+        });
+
+        $('#myTable tbody').on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+
+        $('#editRow').click(function () {
+            let selectedRows = table.rows('.selected').data();
+            if (selectedRows.length > 0) {
+                let firstSelectedRow = selectedRows[0];
+
+                let $editPanel = $('#editPanel');
+                let $inputs = $editPanel.find('input');
+
+                $inputs.eq(0).val(firstSelectedRow.name);
+                $inputs.eq(1).val(firstSelectedRow.dateOfBirth);
+                $inputs.eq(2).val(firstSelectedRow.married);
+                $inputs.eq(3).val(firstSelectedRow.phone);
+                $inputs.eq(4).val(firstSelectedRow.salary);
+
+                $editPanel.show();
+            } else {
+                console.log('No rows selected.');
+            }
+        });
+
+        $('#saveChanges').click(function () {
+            let $editPanel = $('#editPanel');
+            let $inputs = $editPanel.find('input');
+
+            let updatedData = {
+                name: $inputs.eq(0).val(),
+                dateOfBirth: $inputs.eq(1).val(),
+                married: $inputs.eq(2).val(),
+                phone: $inputs.eq(3).val(),
+                salary: $inputs.eq(4).val()
+            };
+
+            let selectedRow = table.rows('.selected').nodes().to$();
+            let rowData = table.row(selectedRow).data();
+
+            $.extend(rowData, updatedData);
+
+            $.ajax({
+                url: '/Home/UpdatePerson',
+                method: 'POST',
+                data: rowData,
+                success: function (response) {
+                    console.log('Data updated successfully:', response);
+
+                    table.ajax.reload();
+                    $editPanel.hide();
+                },
+                error: function (error) {
+                    console.error('Error updating data:', error);
+                }
+            });
+        });
+
+        $('#deleteRow').click(function () {
+            let selectedRows = table.rows('.selected').data();
+            if (selectedRows.length > 0) {
+                let selectedIds = selectedRows
+                    .toArray()
+                    .map(function (row) {
+                        return row.id;
+                    });
+
+                if (confirm('Are you sure you want to delete the selected row(s)?')) {
+
+                    $.ajax({
+                        url: '/Home/DeletePerson',
+                        method: 'POST',
+                        data: { ids: selectedIds },
+                        success: function (response) {
+                            console.log('Rows deleted successfully');
+
+                            table.ajax.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting rows:', error);
+                        }                      
+                    });
+                }
+            } else {
+                console.log('No rows selected.');
+            }
+        });
+    });
+</script>
+
+
+<button class="btn btn-outline-dark" id="deleteRow">Delete Selected Row</button>
+<button class="btn btn-outline-dark" id="editRow">Edit Selected Row</button>
+
+
+<div id="editPanel" style="display: none;">
+    <br />
+    <label>Name:</label>
+    <input type="text" id="nameInput">
+    <label>Date of Birth:</label>
+    <input type="date" id="dobInput">
+    <label>Married:</label>
+    <input type="checkbox" id="marriedInput">
+    <label>Phone:</label>
+    <input type="number" id="phoneInput">
+    <label>Salary:</label>
+    <input type="text" id="salaryInput">
+    <br />
+    <br />
+    <div class="centered-button">
+        <button class="btn btn-light" id="saveChanges">Save Changes</button>
+    </div>
+</div>
+
+<br />
+<br />
+<table id="myTable">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Married</th>
+            <th>Phone</th>
+            <th>Salary</th>         
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Table rows will be dynamically populated -->
+    </tbody>
+</table>
+
