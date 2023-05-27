@@ -25,9 +25,9 @@ namespace Task_Service.Services
             await _uploadRepository.UpdateData(data);
         }
 
-        public async Task DeleteData(List<int> ids)
+        public async Task DeleteData(int id)
         {
-            await _uploadRepository.DeleteData(ids);
+            await _uploadRepository.DeleteData(id);
         }
     }
 }

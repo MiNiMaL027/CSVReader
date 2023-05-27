@@ -8,6 +8,6 @@ namespace Task_Service.Interfaces
 
         Task UpdateData(Person data);
 
-        Task DeleteData(List<int> ids);
+        Task DeleteData(int id);
     }
 }

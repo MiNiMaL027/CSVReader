@@ -7,6 +7,6 @@ namespace Task_Repositories.Interfaces
         Task AddRange(List<Person> file);
         Task<IQueryable<Person>> GetPerson();
         Task<bool> UpdateData(Person data);
-        Task<bool> DeleteData(List<int> ids);
+        Task<bool> DeleteData(int id);
     }
 }

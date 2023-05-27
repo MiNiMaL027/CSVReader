@@ -37,7 +37,7 @@ namespace BitTestTask.Controllers
         public async Task<IActionResult> DeletePerson(int id)
         {
 
-            await _personService.DeleteData(new List<int>() { id});
+            await _personService.DeleteData(id);
             return Ok();
         }
     }

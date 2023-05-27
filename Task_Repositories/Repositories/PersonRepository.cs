@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Task_Domain.Exeptions;
 using Task_Domain.Models;
 using Task_Repositories.Interfaces;
 
@@ -32,10 +33,15 @@ namespace Task_Repositories.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteData(List<int> ids)
+        public async Task<bool> DeleteData(int id)
         {
-            var toDelete = await _db.Persons.Where(x => ids.Contains(x.Id)).ToListAsync();
-            _db.RemoveRange(toDelete);
+            var toDelete = await _db.Persons.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (toDelete == null)
+                throw new NotFoundException();
+
+            _db.Remove(toDelete);
+
             await _db.SaveChangesAsync();
 
             return true;
