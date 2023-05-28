@@ -22,7 +22,7 @@ namespace Task_Repositories.Repositories
 
         public async Task<IQueryable<Person>> GetAll()
         {
-            return _db.Persons.Where(x => !x.IsArсhived);
+            return _db.Persons.Where(x => x.IsArсhived == false);
         }
 
         public async Task<bool> Update(Person data)
@@ -55,6 +55,8 @@ namespace Task_Repositories.Repositories
                 throw new NotFoundException();
 
             toDelete.IsArсhived = true;
+
+            await _db.SaveChangesAsync();
 
             return true;
         }
