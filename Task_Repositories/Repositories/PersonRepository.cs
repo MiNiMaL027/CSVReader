@@ -20,12 +20,12 @@ namespace Task_Repositories.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task<IQueryable<Person>> GetPerson()
+        public async Task<IQueryable<Person>> GetAll()
         {
-            return _db.Persons;
+            return _db.Persons.Where(x => !x.IsArсhived);
         }
 
-        public async Task<bool> UpdateData(Person data)
+        public async Task<bool> Update(Person data)
         {
             _db.Update(data);
             await _db.SaveChangesAsync();
@@ -33,7 +33,7 @@ namespace Task_Repositories.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteData(int id)
+        public async Task<bool> HardDelete(int id)
         {
             var toDelete = await _db.Persons.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -43,6 +43,18 @@ namespace Task_Repositories.Repositories
             _db.Remove(toDelete);
 
             await _db.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            var toDelete = await _db.Persons.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (toDelete == null)
+                throw new NotFoundException();
+
+            toDelete.IsArсhived = true;
 
             return true;
         }

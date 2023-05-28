@@ -33,6 +33,9 @@ namespace BitTestTask.Web.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsArсhived")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Married")
                         .HasColumnType("bit");
 

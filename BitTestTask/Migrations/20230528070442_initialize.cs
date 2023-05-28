@@ -21,7 +21,8 @@ namespace BitTestTask.Web.Migrations
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Married = table.Column<bool>(type: "bit", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Salary = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Salary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsArсhived = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

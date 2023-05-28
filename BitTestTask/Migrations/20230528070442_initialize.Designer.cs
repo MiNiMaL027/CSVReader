@@ -12,7 +12,7 @@ using Task_Repositories;
 namespace BitTestTask.Web.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230527165037_initialize")]
+    [Migration("20230528070442_initialize")]
     partial class initialize
     {
         /// <inheritdoc />
@@ -35,6 +35,9 @@ namespace BitTestTask.Web.Migrations
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsArсhived")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("Married")
                         .HasColumnType("bit");

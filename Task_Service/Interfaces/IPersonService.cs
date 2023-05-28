@@ -6,8 +6,10 @@ namespace Task_Service.Interfaces
     {
         Task<IQueryable<Person>> GetAll();
 
-        Task UpdateData(Person data);
+        Task Update(Person data);
 
-        Task DeleteData(int id);
+        Task HardDelete(int id);
+
+        Task Delete(int id);
     }
 }

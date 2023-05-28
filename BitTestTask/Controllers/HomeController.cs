@@ -29,15 +29,14 @@ namespace BitTestTask.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdatePerson(Person data)
         {
-            await _personService.UpdateData(data);
+            await _personService.Update(data);
             return Ok();
         }
 
         [HttpPost]
         public async Task<IActionResult> DeletePerson(int id)
         {
-
-            await _personService.DeleteData(id);
+            await _personService.Delete(id);
             return Ok();
         }
     }

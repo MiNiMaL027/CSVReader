@@ -2,25 +2,10 @@
     ViewData["Title"] = "Home";
     Layout = "~/Views/Shared/Layout_main.cshtml";
 }
-<style>
-    .center-div {
-        display: grid;
-        place-items: center;
-        align-items: center;
-        height: 100vh;
-    }
 
-    .center-div form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .center-div input[type="submit"] {
-        font-size: 24px;
-        padding: 10px 20px;
-    }
-</style>
+@section styles{
+    <link href="~/css/upload.css" rel="stylesheet"/>
+}
 
 <div class="center-div">
     <form method="post" enctype="multipart/form-data" action="/File/Upload">

@@ -1,7 +1,4 @@
-﻿using CsvHelper;
-using Microsoft.AspNetCore.Http;
-using System.Globalization;
-using Task_Domain.Models;
+﻿using Task_Domain.Models;
 using Task_Service.Interfaces;
 using Task_Repositories.Interfaces;
 namespace Task_Service.Services
@@ -17,17 +14,22 @@ namespace Task_Service.Services
         
         public async Task<IQueryable<Person>> GetAll()
         {
-            return await _uploadRepository.GetPerson();
+            return await _uploadRepository.GetAll();
         }
 
-        public async Task UpdateData(Person data)
+        public async Task Update(Person data)
         {
-            await _uploadRepository.UpdateData(data);
+            await _uploadRepository.Update(data);
         }
 
-        public async Task DeleteData(int id)
+        public async Task HardDelete(int id)
         {
-            await _uploadRepository.DeleteData(id);
+            await _uploadRepository.HardDelete(id);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _uploadRepository.Delete(id);
         }
     }
 }

@@ -26,8 +26,4 @@
     <ProjectReference Include="..\Task_Domain\Task_Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DbBackup\" />
-  </ItemGroup>
-
 </Project>
